@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import Card from '../components/Card';
 import Spinner from '../components/Spinner';
 import TextHead from '../components/TextHead';
-import { BASE_URL } from '../utils/apiUrl';
 import { useTranslation } from 'react-i18next';
 import Search from '../components/Search';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAll } from '../data/characters';
 
 function Home() {
-  const [characters, setCharacters] = useState();
+  const dispatch = useDispatch();
+  const { allCharacters } = useSelector((state) => state.characters);
   const [charactersFiltred, setCharactersFiltred] = useState();
   const [charactersLoading, setCharactersLoading] = useState(true);
   const [searchName, setSearchName] = useState('');
@@ -15,25 +17,23 @@ function Home() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    fetch(BASE_URL + 'characters?category=Breaking+Bad')
-      .then((response) => response.json())
-      .then((data) => {
-        setCharacters(data);
-        setCharactersFiltred(data);
-        setCharactersLoading(false);
-      })
-      .catch((e) => setCharactersLoading(false));
-  }, []);
+    if (!allCharacters) {
+      dispatch(getAll({ serie: 'Breaking+Bad' }));
+    } else {
+      setCharactersLoading(false);
+      setCharactersFiltred(allCharacters);
+    }
+  }, [dispatch, allCharacters]);
 
   const handleOnSearch = () => {
-    if (characters) {
+    if (allCharacters) {
       if (searchName.length > 0) {
-        const data = characters.filter(({ name }) =>
+        const data = allCharacters.filter(({ name }) =>
           name.toLowerCase().includes(searchName.toLowerCase())
         );
         setCharactersFiltred(data);
       } else {
-        setCharactersFiltred(characters);
+        setCharactersFiltred(allCharacters);
       }
     }
   };

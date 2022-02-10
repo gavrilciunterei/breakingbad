@@ -11,6 +11,7 @@ function Card({ img, name, nickname }) {
             src={img}
             alt="avatar"
           />
+
           <div className="py-5 text-center">
             <span className="block text-2xl font-bold text-white">
               {nickname}

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
-import { BASE_URL } from '../utils/apiUrl';
 
 import CharacterInfo from '../components/CharacterInfo';
 import CharacterCard from '../components/CharacterCard';
@@ -9,10 +8,20 @@ import Quote from '../components/Quote';
 import SimpleButton from '../components/buttons/SimpleButton';
 import TextHead from '../components/TextHead';
 import { useTranslation } from 'react-i18next';
+import {
+  getByName,
+  getRandomQuoteByAuthor,
+  getDeathByName,
+} from '../data/characters';
+import { useDispatch, useSelector } from 'react-redux';
 
 function Detail() {
   const { name } = useParams();
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { allCharacters, characterByName } = useSelector(
+    (state) => state.characters
+  );
 
   const [character, setCharacter] = useState();
   const [characterLoading, setCharacterLoading] = useState(true);
@@ -22,53 +31,55 @@ function Detail() {
   const [deathLoading, setDeathLoading] = useState(true);
 
   useEffect(() => {
-    if (name) {
-      fetch(BASE_URL + 'characters?name=' + name.split('-').join('+'))
-        .then((response) => response.json())
-        .then((data) => {
-          setCharacter(data[0]);
-          setCharacterLoading(false);
-        })
-        .catch((e) => setCharacterLoading(false));
+    if (name && !allCharacters && !characterByName) {
+      dispatch(getByName({ name: name.split('-').join('+') }));
+    } else if (allCharacters) {
+      const foundChar = allCharacters.filter(
+        (char) =>
+          char.name.toLowerCase().trim() === name.split('-').join(' ').trim()
+      );
+      setCharacter(foundChar[0]);
+      setCharacterLoading(false);
+    } else if (characterByName) {
+      setCharacter(characterByName[0]);
+      setCharacterLoading(false);
     }
-  }, [name]);
+  }, [dispatch, allCharacters, name, characterByName]);
 
   useEffect(() => {
     if (character) {
       handleLoadQuote();
       handleLoadDeath();
     }
+    // eslint-disable-next-line
   }, [character]);
 
   const handleLoadDeath = () => {
-    fetch(BASE_URL + 'death?name=' + character.name.split(' ').join('+'))
-      .then((response) => response.json())
-      .then((data) => {
-        if (data && data.length > 0) {
-          setDeath(data[0]);
+    dispatch(getDeathByName({ name: character.name.split(' ').join('+') }))
+      .then((res) => {
+        if (res.payload.data && res.payload.data.length > 0) {
+          setDeath(res.payload.data[0]);
         }
         setDeathLoading(false);
       })
-      .catch((e) => setDeathLoading(false));
+      .catch((e) => {
+        setDeathLoading(false);
+      });
   };
 
   const handleLoadQuote = () => {
-    fetch(
-      BASE_URL + 'quote/random?author=' + character.name.split(' ').join('+')
+    dispatch(
+      getRandomQuoteByAuthor({ name: character.name.split(' ').join('+') })
     )
-      .then((response) => response.json())
-      .then((data) => {
-        if (data && data.length > 0) {
-          const newQuote = data[0].quote;
-          if (newQuote !== quote) {
-            setQuote(newQuote);
-          } else {
-            handleLoadQuote();
-          }
+      .then((res) => {
+        if (res.payload.data && res.payload.data.length > 0) {
+          setQuote(res.payload.data[0].quote);
         }
         setQuoteLoading(false);
       })
-      .catch((e) => setQuoteLoading(false));
+      .catch((e) => {
+        setQuoteLoading(false);
+      });
   };
 
   return (
@@ -109,7 +120,10 @@ function Detail() {
                     <Quote text={quote} />
                     <SimpleButton
                       text={t('GET_NEW')}
-                      action={() => handleLoadQuote()}
+                      action={() => {
+                        setQuoteLoading(true);
+                        handleLoadQuote();
+                      }}
                     />
                   </>
                 ) : (
