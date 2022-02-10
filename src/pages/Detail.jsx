@@ -73,8 +73,13 @@ function Detail() {
     )
       .then((res) => {
         if (res.payload.data && res.payload.data.length > 0) {
-          setQuote(res.payload.data[0].quote);
+          if (quote !== res.payload.data[0].quote) {
+            setQuote(res.payload.data[0].quote);
+          } else {
+            return handleLoadQuote();
+          }
         }
+
         setQuoteLoading(false);
       })
       .catch((e) => {
