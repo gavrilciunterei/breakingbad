@@ -1,0 +1,23 @@
+{
+  "CHARACTER_INFO": "Información del personaje",
+  "LANGUAGE_ES": "Español",
+  "LANGUAGE_EN": "Inglés",
+  "DEATH": "Muerte",
+  "CAUSE": "Causa",
+  "RESPONSIBLE": "Muerte",
+  "LAST_WORDS": "Últimas palabras",
+  "NO_DEATH": "Esta personaje no tiene muerte",
+  "GET_NEW": "Obtener nuevo",
+  "NO_QUOTES": "Este personaje no tiene citas",
+  "ID": "Id",
+  "NAME": "Nombre",
+  "NICKNAME": "Apodo",
+  "OCCUPATION": "Ocupación",
+  "PORTRAYED": "Interpretado",
+  "STATUS": "Estado",
+  "BIRTHDAY": "Cumpleaños",
+  "CATEGORY": "Categoria",
+  "APPEARANCE": "Apariencia",
+  "NOT_CHAR_FOUND": "Ningún personaje encontrado",
+  "SEARCH_NAME": "Buscar por nombre"
+}

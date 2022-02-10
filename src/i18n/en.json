@@ -1,0 +1,23 @@
+{
+  "CHARACTER_INFO": "Character info",
+  "LANGUAGE_ES": "Spanish",
+  "LANGUAGE_EN": "English",
+  "DEATH": "Death",
+  "CAUSE": "Cause",
+  "RESPONSIBLE": "Responsible",
+  "LAST_WORDS": "Last words",
+  "NO_DEATH": "This character has no death",
+  "GET_NEW": "Get new",
+  "NO_QUOTES": "This character has no quotes",
+  "ID": "Id",
+  "NAME": "Name",
+  "NICKNAME": "Nickname",
+  "OCCUPATION": "Occupation",
+  "PORTRAYED": "Portrayed",
+  "STATUS": "Status",
+  "BIRTHDAY": "Birthday",
+  "CATEGORY": "Category",
+  "APPEARANCE": "Appearance",
+  "NOT_CHAR_FOUND": "No character found",
+  "SEARCH_NAME": "Search by name"
+}
